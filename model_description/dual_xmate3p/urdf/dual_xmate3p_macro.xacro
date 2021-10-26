@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:include filename="$(find model_description)/dual_xmate3p/urdf/common.xacro"/>
+    <xacro:include filename="$(find model_description)/dual_xmate3p/urdf/xmate3p.xacro"/>
+
+    <xacro:macro name="dual_xmate3p" params="prefix">
+        <xacro:common name="${prefix}common" prefix="${prefix}common_"/>
+        <!-- arm_left robot -->
+        <xacro:xmate3p name="${prefix}arm_left" prefix="${prefix}arm_left_" parent="${prefix}common_robot_1" reflect="1">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:xmate3p>
+        <!-- arm_right robot -->
+        <xacro:xmate3p name="${prefix}arm_right" prefix="${prefix}arm_right_" parent="${prefix}common_robot_2" reflect="1">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:xmate3p>
+    </xacro:macro>
+    <!-- <xacro:macro name="xmate3p">
+        <xacro:xmate3p prefix=""/>
+    </xacro:macro> -->
+</robot>

@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+
+<robot name="dual_xmate3p" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:include filename="$(find model_description)/dual_xmate3p/urdf/dual_xmate3p_macro.xacro"/>
+    <xacro:dual_xmate3p prefix=""/>
+</robot>

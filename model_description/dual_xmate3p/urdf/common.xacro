@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:macro name="common" params="name prefix">
+        <link name="world"/>
+        <link name="${prefix}robot_1"/>
+        <link name="${prefix}robot_2"/>
+        <joint name="robot1_fixed" type="fixed">
+            <parent link="world"/>
+            <child link="${prefix}robot_1"/>
+            <origin xyz="0 0.25 0" rpy="0 0 0"/>
+        </joint>
+
+        <joint name="robot2_fixed" type="fixed">
+            <parent link="world"/>
+            <child link="${prefix}robot_2"/>
+            <origin xyz="0 -0.25 0" rpy="0 0 0"/>
+        </joint>
+    </xacro:macro>
+</robot>
