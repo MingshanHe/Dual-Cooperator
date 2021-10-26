@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: model_description
+    relative_path: dual_xmate3p/urdf/dual_xmate3p.xacro
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/dual_xmate3p.srdf
+  CONFIG:
+    author_name: MingshanHe
+    author_email: hemingshan_1999@163.com
+    generated_timestamp: 1634275993

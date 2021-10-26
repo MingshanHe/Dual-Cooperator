@@ -1,0 +1,54 @@
+controller_list:
+  - name: fake_base_controller
+    joints:
+      []
+  - name: fake_left_arm_controller
+    joints:
+      - arm_left_joint1
+      - arm_left_joint2
+      - arm_left_joint3
+      - arm_left_joint4
+      - arm_left_joint5
+      - arm_left_joint6
+      - arm_left_joint7
+  - name: fake_right_arm_controller
+    joints:
+      - arm_right_joint1
+      - arm_right_joint2
+      - arm_right_joint3
+      - arm_right_joint4
+      - arm_right_joint5
+      - arm_right_joint6
+      - arm_right_joint7
+  - name: fake_arms_controller
+    joints:
+      - arm_left_joint1
+      - arm_left_joint2
+      - arm_left_joint3
+      - arm_left_joint4
+      - arm_left_joint5
+      - arm_left_joint6
+      - arm_left_joint7
+      - arm_right_joint1
+      - arm_right_joint2
+      - arm_right_joint3
+      - arm_right_joint4
+      - arm_right_joint5
+      - arm_right_joint6
+      - arm_right_joint7
+  - name: fake_All_controller
+    joints:
+      - arm_left_joint1
+      - arm_left_joint2
+      - arm_left_joint3
+      - arm_left_joint4
+      - arm_left_joint5
+      - arm_left_joint6
+      - arm_left_joint7
+      - arm_right_joint1
+      - arm_right_joint2
+      - arm_right_joint3
+      - arm_right_joint4
+      - arm_right_joint5
+      - arm_right_joint6
+      - arm_right_joint7
