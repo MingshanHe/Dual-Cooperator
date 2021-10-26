@@ -1,0 +1,28 @@
+joint_trajectory_controller: 
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - joint1
+    - joint2
+    - joint3
+    - joint4
+    - joint5
+    - joint6
+    - joint7
+  state_publish_rate: 1000
+  action_monitor_rate: 1000
+  stop_trajectory_duration: 0.5
+  hold_trajectory_duration: 0.5
+hyy_trajectory_controller: 
+  type: hyy_controller/HYYController
+  joints:
+    - joint1
+    - joint2
+    - joint3
+    - joint4
+    - joint5
+    - joint6
+    - joint7
+joint_state_controller: 
+  type: joint_state_controller/JointStateController
+  publish_rate: 1000
+

@@ -1,0 +1,33 @@
+<launch>
+  
+  <arg name="load_robot_description" default="true"/>
+
+  <!-- The name of the parameter under which the URDF is loaded -->
+  <arg name="robot_description" default="robot_description"/>
+
+  <arg name="commond_controller" value="joint_trajectory_controller"/>
+  <arg name="hyy_controller" value="hyy_trajectory_controller"/>
+  <arg name="state_controller" value="joint_state_controller"/>
+  <arg name="sim_flag" value="false"/>
+  <arg name="system_arg" value="--path /home/hanbing/work/program/robot/config/robot/INNFOS4/robot_config/ --iscopy true"/>
+  <arg name="device_mode" value="8"/>
+  <arg name="communication_time" value="2000000"/>
+
+  <!-- Load universal robot description format (URDF) -->
+  <param if="$(arg load_robot_description)" name="$(arg robot_description)" textfile="$(find model_description)/innfos4/urdf/innfos4.urdf"/>
+  
+  <!-- Load controller paramber -->
+  <param name="commond_controller" value="$(arg commond_controller)"/>
+  <param name="hyy_controller" value="$(arg hyy_controller)"/>
+  <param name="state_controller" value="$(arg state_controller)"/>
+  <param name="sim_flag" value="$(arg sim_flag)"/>
+  <param name="system_arg" value="$(arg system_arg)"/>
+  <param name="device_mode" value="$(arg device_mode)"/>
+  <param name="communication_time" value="$(arg communication_time)"/>
+
+  <rosparam command="load" file="$(find device_driver)/config/controllers.yaml"/>
+
+
+  <node name="device_driver" pkg="device_driver" type="device_driver" output="screen" />
+
+</launch>

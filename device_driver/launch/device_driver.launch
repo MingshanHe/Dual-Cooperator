@@ -1,0 +1,58 @@
+<launch>
+  <!-- swith arg -->
+  <arg name="load_dual_robot" default="true"/>
+  <arg name="load_robot_description" default="true"/>
+
+  <!-- The name of the parameter under which the URDF is loaded -->
+  <arg name="robot_description" default="robot_description"/>
+  <!-- The name of the controllers and its namespace -->
+  <arg name="controllers_namespace" value="controllers"/>
+    <!-- The dual robot controllers -->
+  <arg name="left_arm_controller" value="left_joint_trajectory_controller"/>
+  <arg name="right_arm_controller" value="right_joint_trajectory_controller"/>
+  <arg name="hyy_controller" value="hyy_trajectory_controller"/>
+    <!-- The single robot controllers -->
+  <arg name="trajectory_controller" value="joint_trajectory_controller"/>
+    <!-- The joint state controller -->
+  <arg name="state_controller" value="joint_state_controller"/>
+
+  <arg name="sim_flag" value="false"/>
+  <arg name="system_arg" value="--path /home/robot/Work/system/robot_config --iscopy true"/>
+  <arg name="device_mode" value="8"/>
+  <arg name="communication_time" value="1000000"/>
+
+  <!-- load robots and controllers based on the switch mode -->
+  <group if="$(arg load_dual_robot)">
+    <param if="$(arg load_robot_description)" name="$(arg robot_description)" command="$(find xacro)/xacro --inorder '$(find model_description)/dual_xmate3p/urdf/dual_xmate3p.xacro'"/>
+    <param name="load_dual_robot" value="$(arg load_dual_robot)"/>
+    <param name="controllers_namespace" value="$(arg controllers_namespace)"/>
+    <param name="left_arm_controller" value="$(arg left_arm_controller)"/>
+    <param name="right_arm_controller" value="$(arg right_arm_controller)"/>
+    <param name="state_controller" value="$(arg state_controller)"/>
+  </group>
+  <group unless="$(arg load_dual_robot)">
+    <param if="$(arg load_robot_description)" name="$(arg robot_description)" textfile="$(find model_description)/xmate3p/urdf/xmate3p.urdf"/>
+    <param name="load_dual_robot" value="$(arg load_dual_robot)"/>
+    <param name="controllers_namespace" value="$(arg controllers_namespace)"/>
+    <param name="trajectory_controller" value="$(arg trajectory_controller)"/>
+    <param name="hyy_controller" value="hyy_controller"/>
+    <param name="state_controller" value="$(arg state_controller)"/>
+  </group>
+  <!-- Load controller paramber -->
+  <param name="sim_flag" value="$(arg sim_flag)"/>
+  <param name="system_arg" value="$(arg system_arg)"/>
+  <param name="device_mode" value="$(arg device_mode)"/>
+  <param name="communication_time" value="$(arg communication_time)"/>
+
+  <rosparam command="load" file="$(find device_driver)/config/controllers.yaml"/>
+
+  <!-- <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/> -->
+  <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/> -->
+  <node name="device_driver" pkg="device_driver" type="device_driver" output="screen" />
+  <arg name="left_controller_name_" default="controllers/left_joint_trajectory_controller"/>
+  <arg name="right_controller_name_" default="controllers/right_joint_trajectory_controller"/>
+  <arg name="state_controller_" default="controllers/joint_state_controller"/>
+  <!-- start controller -->
+  <!-- <node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false"
+      output="screen" args="start $(arg state_controller_) $(arg left_controller_name_) $(arg right_controller_name_)  " /> -->
+</launch>

@@ -1,0 +1,11 @@
+<launch>
+<arg name="left_controller_name" default="controllers/left_joint_trajectory_controller"/>
+<arg name="right_controller_name" default="controllers/right_joint_trajectory_controller"/>
+<arg name="state_controller" default="controllers/joint_state_controller"/>
+<!-- start controller -->
+<node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false"
+    output="screen" args="start $(arg left_controller_name) $(arg right_controller_name) $(arg state_controller)" />
+<!-- <node name="ros_control_controller_manager2" pkg="controller_manager" type="controller_manager" respawn="false"
+output="screen" args="start $(arg right_controller_name) $(arg state_controller)" /> -->
+</launch>
+    

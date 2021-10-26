@@ -1,0 +1,7 @@
+<launch>
+<arg name="controller_name" default="joint_trajectory_controller"/>
+<!-- stop controller -->
+<node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false"
+    output="screen" args="stop $(arg controller_name) joint_state_controller" />
+
+</launch>
