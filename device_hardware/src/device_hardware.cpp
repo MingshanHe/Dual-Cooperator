@@ -31,35 +31,20 @@ namespace device_hardware
       using namespace hardware_interface;
       using namespace joint_limits_interface;
       using namespace HYYRobotBase;
+
       size_t i=0;
       size_t j=0;
-      
-      //--------------------------------------
-      joint_state_test[0][0] = 0;
-      joint_state_test[0][1] = 1;
-      joint_state_test[0][2] = 2;
-      joint_state_test[0][3] = 3;
-      joint_state_test[0][4] = 4;
-      joint_state_test[0][5] = 5;
-      joint_state_test[0][6] = 6;
-      joint_state_test[0][7] = 7;
 
-      joint_state_test[1][0] = 0;
-      joint_state_test[1][1] = 1;
-      joint_state_test[1][2] = 2;
-      joint_state_test[1][3] = 3;
-      joint_state_test[1][4] = 4;
-      joint_state_test[1][5] = 5;
-      joint_state_test[1][6] = 6;
-      joint_state_test[1][7] = 7;
-      //robot initialize
+      // Robots Initialize
       robot_num = hasNumber_robot_device(get_deviceName(0,NULL));
       ROS_INFO("Robot Number = %d", robot_num);
+      // Avoiding the Address Error Caused by Release the Push Back Function
       for (i = 0; i < robot_num; i++)
       {
          Robot_Information Robot;
          Robots.push_back(Robot);
       }
+      // Active every robot
       for (i = 0; i < robot_num; i++)
       {
          Robots[i].robot_name = get_name_robot_device(get_deviceName(0,NULL), i);
@@ -129,9 +114,9 @@ namespace device_hardware
          Robots[i].joint_velocity_state_.resize(Robots[i].joints_num);
          Robots[i].joint_effort_state_.resize(Robots[i].joints_num);
 
-         Robots[i].joint_position_command_.resize(Robots[i].joints_num);
-         Robots[i].joint_velocity_command_.resize(Robots[i].joints_num);
-         Robots[i].joint_effort_command_.resize(Robots[i].joints_num);
+         Robots[i].joint_position_commond_.resize(Robots[i].joints_num);
+         Robots[i].joint_velocity_commond_.resize(Robots[i].joints_num);
+         Robots[i].joint_effort_commond_.resize(Robots[i].joints_num);
 
          Robots[i].joint_name_.resize(Robots[i].joints_num);
 
@@ -149,10 +134,9 @@ namespace device_hardware
             Robots[i].joint_position_state_[j] = GetAxisPosition(Robots[i].robot_name,j+1);
             Robots[i].joint_velocity_state_[j] = 0.0;
             Robots[i].joint_effort_state_[j] = 0.0;
-            Robots[i].joint_position_command_[j] = Robots[i].joint_position_state_[j];
-            ROS_INFO("joint_position_state_: %s  %f",Robots[i].robot_name,Robots[i].joint_position_command_[j]);
-            Robots[i].joint_velocity_command_[j] = Robots[i].joint_velocity_state_[j];
-            Robots[i].joint_effort_command_[j] = Robots[i].joint_effort_state_[j];
+            Robots[i].joint_position_commond_[j] = Robots[i].joint_position_state_[j];
+            Robots[i].joint_velocity_commond_[j] = Robots[i].joint_velocity_state_[j];
+            Robots[i].joint_effort_commond_[j] = Robots[i].joint_effort_state_[j];
 
             // Populate hardware interfaces
             js_interface_.registerHandle(
@@ -162,27 +146,32 @@ namespace device_hardware
                                  &(Robots[i].joint_effort_state_[j]))
                                  );
 
-            Robots[i].pj_handle_[j] = JointHandle(js_interface_.getHandle(Robots[i].joints[j]), &(Robots[i].joint_position_command_[j]));
-            Robots[i].vj_handle_[j] = JointHandle(js_interface_.getHandle(Robots[i].joints[j]), &(Robots[i].joint_velocity_command_[j]));
-            Robots[i].ej_handle_[j] = JointHandle(js_interface_.getHandle(Robots[i].joints[j]), &(Robots[i].joint_effort_command_[j]));
+            Robots[i].pj_handle_[j] = JointHandle(
+               js_interface_.getHandle(Robots[i].joints[j]),
+               &(Robots[i].joint_position_commond_[j]));
+            Robots[i].vj_handle_[j] = JointHandle(
+               js_interface_.getHandle(Robots[i].joints[j]),
+               &(Robots[i].joint_velocity_commond_[j]));
+            Robots[i].ej_handle_[j] = JointHandle(
+               js_interface_.getHandle(Robots[i].joints[j]),
+               &(Robots[i].joint_effort_commond_[j]));
 
             pj_interface_.registerHandle(Robots[i].pj_handle_[j]);
             vj_interface_.registerHandle(Robots[i].vj_handle_[j]);
             ej_interface_.registerHandle(Robots[i].ej_handle_[j]);
          }
-           //
          Robots[i].joint_position_sim_.resize(Robots[i].joints_num,0.0);
          Robots[i].joint_velocity_sim_.resize(Robots[i].joints_num,0.0);
          Robots[i].joint_effort_sim_.resize(Robots[i].joints_num,0.0);
 
-         double angle_tmp[20]={0,0,0,Robots[i].joint_position_sim_[4],0,0};
+         double angle_tmp[20]={0,0,0,Robots[i].joint_position_sim_[4],0,0,0};
 
          if (_sim_flag)
          {
             SetGroupPosition(Robots[i].robot_name, angle_tmp);
             for (j=0;j<Robots[i].joints_num;j++)
             {
-               Robots[i].joint_position_command_[j] = Robots[i].joint_position_sim_[j];
+               Robots[i].joint_position_commond_[j] = Robots[i].joint_position_sim_[j];
                Robots[i].joint_position_state_[j] = Robots[i].joint_position_sim_[j];
             }
          }
@@ -192,7 +181,7 @@ namespace device_hardware
             SetGroupPosition(Robots[i].robot_name, angle_tmp);
             for (j = 0;j < Robots[i]._dof;j++)
             {
-               Robots[i].joint_position_command_[j] = angle_tmp[j];
+               Robots[i].joint_position_commond_[j] = angle_tmp[j];
                Robots[i].joint_position_state_[j] = angle_tmp[j];
             }
          }
@@ -200,22 +189,9 @@ namespace device_hardware
       }
 
       registerInterface(&js_interface_);
-      // ROS_INFO("address: %d\n",&(Robots[0].joint_position_state_[0]));
       registerInterface(&pj_interface_);
       registerInterface(&vj_interface_);
       registerInterface(&ej_interface_);
-     //----------------------------------------------------------
-      // if(!robot_hw_nh.getParam("commond_controller", commond_controller))
-      // {
-      //    ROS_ERROR_STREAM("ros con't find paramber \"commond_controller\"");
-      //    return 0;
-      // }
-
-      // if(!robot_hw_nh.getParam("hyy_controller", hyy_controller))
-      // {
-      //    ROS_ERROR_STREAM("ros con't find paramber \"hyy_controller\"");
-      //    return 0;
-      // }
 
       controller_flag=0;
       ROS_INFO("device initialize finish");
@@ -225,7 +201,7 @@ namespace device_hardware
 
    void DeviceHardware::read(const ros::Time& time, const ros::Duration& period)
    {
-   // read from device_interface write joint_position_state_, joint_velocity_state_, joint_effort_state_
+      // read from device_interface write joint_position_state_, joint_velocity_state_, joint_effort_state_
       size_t i=0;
       if (_sim_flag)
       {
@@ -246,26 +222,9 @@ namespace device_hardware
       {
          for(i = 0; i < robot_num; i++)
          {
-            // HYYRobotBase::GetGroupPosition(Robots[i].robot_name, pp);
             HYYRobotBase::GetGroupPosition(Robots[i].robot_name, &(Robots[i].joint_position_state_[0]));
             HYYRobotBase::GetGroupVelocity(Robots[i].robot_name, &(Robots[i].joint_velocity_state_[0]));
             HYYRobotBase::GetGroupTorque(Robots[i].robot_name, &(Robots[i].joint_effort_state_[0]));
-            // ROS_INFO("joint_position_state_ in read: %s  %f",Robots[i].robot_name,joint_state_command_[i][4]);
-            // ROS_INFO("Get Group Position: %s  %f %f %f %f %f %f %f",Robots[i].robot_name,
-            // joint_state_test[i][0],
-            // joint_state_test[i][1],
-            // joint_state_test[i][2],
-            // joint_state_test[i][3],
-            // joint_state_test[i][4],
-            // joint_state_test[i][5],
-            // joint_state_test[i][6]);
-            // ROS_INFO("address: %d %d %d %d %d %d %d\n",&(Robots[i].joint_position_state_[0]),
-            // &(joint_state_test[i][0]),
-            // &(joint_state_test[i][1]),
-            // &(joint_state_test[i][2]),
-            // &(joint_state_test[i][3]),
-            // &(joint_state_test[i][4]),
-            // &(joint_state_test[i][5]));
          }
       }
 
@@ -282,13 +241,13 @@ namespace device_hardware
          for(i = 0; i<robot_num; i++)
          {
             memcpy(  &(Robots[i].joint_position_sim_[0]),
-                     &(Robots[i].joint_position_command_[0]),
+                     &(Robots[i].joint_position_commond_[0]),
                      Robots[i].joints_num*sizeof(double));
             memcpy(  &(Robots[i].joint_velocity_sim_[0]),
-                     &(Robots[i].joint_velocity_command_[0]),
+                     &(Robots[i].joint_velocity_commond_[0]),
                      Robots[i].joints_num*sizeof(double));
             memcpy(  &(Robots[i].joint_effort_sim_[0]),
-                     &(Robots[i].joint_effort_command_[0]),
+                     &(Robots[i].joint_effort_commond_[0]),
                      Robots[i].joints_num*sizeof(double));
          }
       }
@@ -296,20 +255,9 @@ namespace device_hardware
       {
          for(i = 0; i < robot_num; i++)
          {
-            // ROS_INFO("joint_state_command_: %f", joint_state_command_[i][0]);
-            // joint_state_command_
-            // ROS_INFO("joint_position_state_ in write: %s  %f",Robots[i].robot_name,joint_state_command_[i][4]);
-            HYYRobotBase::SetGroupPosition(Robots[i].robot_name, &(Robots[i].joint_position_command_[0]));
-            HYYRobotBase::SetGroupVelocity(Robots[i].robot_name, &(Robots[i].joint_velocity_command_[0]));
-            HYYRobotBase::SetGroupTorque(Robots[i].robot_name, &(Robots[i].joint_effort_command_[0]));
-            // ROS_INFO("Set Group Position: %s  %f %f %f %f %f %f %f",Robots[i].robot_name,
-            // Robots[i].joint_position_command_[0],
-            // Robots[i].joint_position_command_[1],
-            // Robots[i].joint_position_command_[2],
-            // Robots[i].joint_position_command_[3],
-            // Robots[i].joint_position_command_[4],
-            // Robots[i].joint_position_command_[5],
-            // Robots[i].joint_position_command_[6]);
+            HYYRobotBase::SetGroupPosition(Robots[i].robot_name, &(Robots[i].joint_position_commond_[0]));
+            HYYRobotBase::SetGroupVelocity(Robots[i].robot_name, &(Robots[i].joint_velocity_commond_[0]));
+            HYYRobotBase::SetGroupTorque(Robots[i].robot_name, &(Robots[i].joint_effort_commond_[0]));
          }
       }
    }
@@ -327,7 +275,6 @@ bool DeviceHardware::prepareSwitch(const std::list<hardware_interface::Controlle
          else
          {
         	 //
-
          }
       }
    }
@@ -342,7 +289,6 @@ bool DeviceHardware::prepareSwitch(const std::list<hardware_interface::Controlle
          else
          {
         	 //
-
          }
       }
    }
@@ -469,8 +415,4 @@ void DeviceHardware::doSwitch(const std::list<hardware_interface::ControllerInfo
 }
 }//namespace ec_hardware
 
-
 PLUGINLIB_EXPORT_CLASS( device_hardware::DeviceHardware, hardware_interface::RobotHW)
-
-
-
