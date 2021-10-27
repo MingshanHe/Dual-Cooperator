@@ -28,8 +28,6 @@ int main(int argc, char **argv)
 
    std::string controllers_namespace;
    bool load_dual_robot;
-
-
    std::string state_controller;
    bool sim_flag=false;
    int communication_time=0;
@@ -45,19 +43,16 @@ int main(int argc, char **argv)
       ROS_ERROR_STREAM("ros con't find paramber \"load_dual_robot\"");
       return 0;
    }
-
    if(!node_root.getParam("state_controller", state_controller))
    {
       ROS_ERROR_STREAM("ros con't find paramber \"state_controller\"");
       return 0;
    }
-
    if(!node_root.getParam("sim_flag", sim_flag))
    {
       ROS_ERROR_STREAM("ros con't find paramber \"sim_flag\"");
       return 0;
    }
-
    if(!node_root.getParam("communication_time", communication_time))
    {
       ROS_ERROR_STREAM("ros con't find paramber \"communication_time\"");
@@ -76,8 +71,8 @@ int main(int argc, char **argv)
    {
       if (0!=HYYRobotBase::system_initialize(&arg))
       {
-      ROS_ERROR_STREAM("device initialize failure! system_initialize faiure!");
-      return false;
+         ROS_ERROR_STREAM("device initialize failure! system_initialize faiure!");
+         return false;
       }
    }
    else
